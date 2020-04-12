@@ -61,7 +61,7 @@ class PhpDocReader {
      */
     public function getDescription(): ?string
     {
-        if (isset($this->lines[0]) && Str::contains($this->lines[0], '@') === false) {
+        if (isset($this->lines[0]) && $this->lineHasParam($this->lines[0]) === false) {
             return $this->lines[0];
         }
 
@@ -76,5 +76,14 @@ class PhpDocReader {
         return trim(
             str_replace('*', '', $line)
         );
+    }
+
+    /**
+     * @param string $line
+     * @return bool
+     */
+    private function lineHasParam(string $line): bool
+    {
+        return Str::startsWith($line, '@');
     }
 }
