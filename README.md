@@ -7,7 +7,7 @@
 
 ## Install 
 ```shell script
-composer require lootjs/otium
+composer require loot/otium
 ```
 Then run:
 ```
