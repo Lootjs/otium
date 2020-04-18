@@ -32,7 +32,7 @@ class ParseRoute
             return null; // closure as route handler not supported
         }
 
-        $meta = $this->parseComment();
+        ['meta' => $meta, 'extra' => $extra] = $this->parseComment();
         $parameters = array_merge(
             $this->parseHeaders(),
             $this->parseParameters(),
@@ -47,6 +47,7 @@ class ParseRoute
             'description' => $meta['description'],
             'operationId' => $this->getOperationId(),
             'uses' => $this->route->getAction()['uses'],
+            'extra' => $extra,
             'parameters' => $parameters,
             'responses' => [
                 200 => [

@@ -62,13 +62,17 @@ class OpenApiWriter implements DocumentationWriter
             $method = strtolower(key($pathList));
 
             foreach ($pathList as $path) {
-                $result[$uri][$method] = [
+                $tmpData = [
                     'tags' => $path['tags'],
                     'summary' => $path['summary'],
                     'description' => $path['description'],
                     'operationId' => $path['operationId'],
                     'parameters' => $path['parameters'],
                 ];
+
+                $tmpData += $path['extra'];
+
+                $result[$uri][$method] = $tmpData;
             }
         }
 
