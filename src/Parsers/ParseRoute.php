@@ -19,7 +19,6 @@ class ParseRoute
     public function __construct(Route $route)
     {
         $this->route = $route;
-        $this->start();
     }
 
     /**
@@ -27,7 +26,7 @@ class ParseRoute
      *
      * @return Fluent|null
      */
-    private function start(): ?Fluent
+    public function start(): ?Fluent
     {
         if (! is_string($this->route->getAction()['uses'])) {
             return null; // closure as route handler not supported

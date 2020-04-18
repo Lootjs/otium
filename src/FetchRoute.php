@@ -3,7 +3,6 @@
 namespace Loot\Otium;
 
 use Illuminate\Routing\Route;
-use Illuminate\Support\Fluent;
 use Loot\Otium\Parsers\ParseRoute;
 
 class FetchRoute {
@@ -19,7 +18,7 @@ class FetchRoute {
     public function load(array $routes): void
     {
         foreach ($routes as $route) {
-            if ($path = \app(ParseRoute::class, ['route' => $route])) {
+            if ($path = \app(ParseRoute::class, ['route' => $route])->start()) {ddd($path);
                 $this->addPath($path);
             }
         }
@@ -36,10 +35,10 @@ class FetchRoute {
     /**
      * Add route to storage.
      *
-     * @param Fluent $path
+     * @param Route $path
      * @return void
      */
-    private function addPath(Fluent $path): void
+    private function addPath(ParseRoute $path): void
     {
         $this->paths[$path->uri][$path->method] = $path;
     }
