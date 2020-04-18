@@ -6,6 +6,10 @@ use Illuminate\Support\Str;
 
 class PhpDocReader {
 
+    public const FIELDS = [
+        'extra' => '@param-otium-extra',
+    ];
+
     /**
      * @var \ReflectionMethod
      */
@@ -37,7 +41,7 @@ class PhpDocReader {
     /**
      * removes comment tags
      */
-    private function removeWrapper()
+    private function removeWrapper(): void
     {
         $this->comment = substr($this->reflection->getDocComment(), 3, -2);
     }
@@ -45,7 +49,7 @@ class PhpDocReader {
     /**
      * Split comment to array
      */
-    private function splitComment()
+    private function splitComment(): void
     {
         $lines = explode("\n", $this->comment);
         /** remove spaces and wildcard */
@@ -80,10 +84,35 @@ class PhpDocReader {
 
     /**
      * @param string $line
+     * @param string $type
      * @return bool
      */
-    private function lineHasParam(string $line): bool
+    private function lineHasParam(string $line, string $type = '@'): bool
     {
-        return Str::startsWith($line, '@');
+        return Str::startsWith($line, $type);
+    }
+
+    /**
+     * Find @param-otium-extra annotation.
+     * @return array
+     */
+    public function getExtraFields(): array
+    {
+        $result = [];
+        $extraFields = array_filter($this->lines, function($line) {
+           return $this->lineHasParam($line, self::FIELDS['extra']);
+        });
+
+        foreach ($extraFields as $extraField) {
+            [, $json] = explode(self::FIELDS['extra'], $extraField);
+            $jsonArray = json_decode(trim($json), true);
+            $result += $jsonArray ?? [];
+        }
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $result = ['invalid json in '.self::FIELDS['extra']];
+        }
+
+        return $result;
     }
 }

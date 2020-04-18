@@ -32,6 +32,7 @@ class ParseComment
         try {
             $reader = new PhpDocReader($this->route->getController(), $this->route->getActionMethod());
             $data['description'] = $reader->getDescription();
+            $data['extra'] = $reader->getExtraFields();
         } catch (\Exception $e) {
 
         }
