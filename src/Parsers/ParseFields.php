@@ -68,8 +68,9 @@ class ParseFields
     {
         $result = [];
         $request = $this->getRequestArgument();
+        $rules = $request ? $request->rules() : [];
 
-        foreach ($request->rules() as $rule => $validation) {
+        foreach ($rules as $rule => $validation) {
             $result[] = [
                 'name' => $rule,
                 'in' => 'formData',
@@ -126,12 +127,18 @@ class ParseFields
     {
         $reflection = new \ReflectionMethod($this->route->getController(), $this->route->getActionMethod());
         $parameters = $reflection->getParameters();
-        $needleParameters = array_filter($parameters, function (\ReflectionParameter $p) {
-            return $p->getClass()->isSubclassOf(FormRequest::class);
+        $needleParameters = array_filter($parameters, function (\ReflectionParameter $param) {
+            $typehint = $param->getClass();
+
+            if ($typehint === null) {
+                return false;
+            }
+
+            return $typehint->isSubclassOf(FormRequest::class);
         });
 
         if (count($needleParameters) === 0) {
-            return new FormRequest;
+            return null;
         }
 
         /**
