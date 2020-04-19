@@ -32,11 +32,16 @@ class ParseRoute
             return null; // closure as route handler not supported
         }
 
-        ['meta' => $meta, 'extra' => $extra] = $this->parseComment();
+        [
+            'meta' => $meta,
+            'extra' => $extra,
+            'hints' => $hints,
+        ] = $this->parseComment();
         $parameters = array_merge(
             $this->parseHeaders(),
             $this->parseParameters(),
-            $this->parseFields()
+            $this->parseFields(),
+            $hints
         );
 
         return new Fluent([

@@ -8,6 +8,7 @@ class PhpDocReader {
 
     public const FIELDS = [
         'extra' => '@param-otium-extra',
+        'hints' => '@param-otium-hint',
     ];
 
     /**
@@ -111,6 +112,26 @@ class PhpDocReader {
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             $result = ['invalid json in '.self::FIELDS['extra']];
+        }
+
+        return $result;
+    }
+
+    public function getAnnotationHints(): array
+    {
+        $result = [];
+        $hints = array_filter($this->lines, function($line) {
+            return $this->lineHasParam($line, self::FIELDS['hints']);
+        });
+
+        foreach ($hints as $hint) {
+            [, $json] = explode(self::FIELDS['hints'], $hint);
+            $jsonArray = json_decode(trim($json), true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                $result = ['invalid json in '.self::FIELDS['hints']];
+            } else {
+                $result[] = $jsonArray;
+            }
         }
 
         return $result;
