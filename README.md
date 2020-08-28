@@ -44,7 +44,4 @@ php artisan loot:generate-docs
 ```
 
 ### Todo
-- [ ] Добавить поддержку apiblueprint.org
-- [ ] Добавить поддержку кеширования методов, вместо постоянного использования Reflection
-- [ ] Добавить поддержку пакета swagger ui, вместо l5-swagger
-- [ ] Добавить поддержку swagger 2.0
+Roadmap доступен тут https://trello.com/b/XNh0t5g0/otiums-roadmap
